@@ -8,9 +8,9 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    function login(Request $request)
+    function postLogin(Request $request)
     {
-        $user= User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
