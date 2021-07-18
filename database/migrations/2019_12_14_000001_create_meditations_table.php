@@ -16,6 +16,7 @@ class CreateMeditationsTable extends Migration
         Schema::create('meditations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
+            $table->time("time");
             $table->timestamps();
         });
     }

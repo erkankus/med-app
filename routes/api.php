@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StatisticController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +16,10 @@ use App\Http\Controllers\UserController;
 */
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
-    //All secure URL's
+    Route::post("meditation-count", [StatisticController::class, 'getMeditationCount']);
+    Route::post("meditation-total-time", [StatisticController::class, 'getMeditationTotalTime']);
+    Route::post("meditation-top-count", [StatisticController::class, 'getMeditationTopCount']);
+    Route::post("last-week-meditation-time", [StatisticController::class, 'getLastWeekMeditationTime']);
 });
-
 
 Route::post("login", [UserController::class, 'postLogin']);
