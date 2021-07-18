@@ -19,7 +19,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post("meditation-count", [StatisticController::class, 'getMeditationCount']);
     Route::post("meditation-total-time", [StatisticController::class, 'getMeditationTotalTime']);
     Route::post("meditation-top-count", [StatisticController::class, 'getMeditationTopCount']);
-    Route::post("last-week-meditation-time", [StatisticController::class, 'getLastWeekMeditationTime']);
+    Route::post("last-seven-day-meditation", [StatisticController::class, 'getLastSevenDayMeditation']);
 });
 
 Route::post("login", [UserController::class, 'postLogin']);

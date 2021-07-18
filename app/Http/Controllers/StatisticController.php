@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserMeditation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\GlobalHelper;
 
 class StatisticController extends Controller
 {
@@ -35,24 +36,30 @@ class StatisticController extends Controller
      */
     function getMeditationTotalTime(Request $request)
     {
-        // userın toplam meditasyon yaptığı süre
+        // User' ın toplam meditasyon yaptığı süre
         $userMeditationTotalTime = UserMeditation::selectRaw('time(sum(meditations.time)) as total')
                                                  ->join('meditations', 'user_meditations.meditation_id', 'meditations.id')
                                                  ->where('user_meditations.user_id', $request->user()->id)
                                                  ->where('user_meditations.completed', 'Y')
                                                  ->first('total');
 
+        $userMeditationTotalTime = isset($userMeditationTotalTime) ? $userMeditationTotalTime->total : 0;
+
         return response()->json([
             'success' => true,
             'data' => [
-                'time' => $userMeditationTotalTime->total
+                'total_time' => $userMeditationTotalTime
             ],
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     function getMeditationTopCount(Request $request)
     {
-        // userın hiç ara vermeden en fazla kaç gün üst üste meditasyon tamamladığı sayısı
+        // User' ın hiç ara vermeden en fazla kaç gün üst üste meditasyon tamamladığı sayısı
         $userMeditations = UserMeditation::select(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d') as date"))
                                          ->where('completed', 'Y')
                                          ->where('user_id', $request->user()->id)
@@ -62,7 +69,7 @@ class StatisticController extends Controller
 
         $count = 0;
 
-        if ($userMeditations) {
+        if (!is_null($userMeditations)) {
             $meditationArr = $userMeditations->pluck('date')->toArray();
             $firstDay = Arr::first($meditationArr);
 
@@ -81,34 +88,41 @@ class StatisticController extends Controller
             }
         }
 
+        $meditationTopCountResult = $count;
+
         return response()->json([
             'success' => true,
             'data' => [
-                'count' => $count
+                'meditation_top_count' => $meditationTopCountResult
             ],
         ]);
     }
 
-    function getLastWeekMeditationTime(Request $request)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function getLastSevenDayMeditation(Request $request)
     {
-        // userın son 7 gün ve bu günlerde meditasyon yaptığı süre
+        // User' ın son 7 gün ve bu günlerde meditasyon yaptığı toplam süre
+        $dateSevenDayAgo = GlobalHelper::dateDayBefore(7);
 
-        $dayAfter = strtotime('-7 day',strtotime(date('Y-m-d H:i:s')));
-        $date = date('Y-m-d', $dayAfter);
-
-        $userMeditationTotalTime = UserMeditation::selectRaw("time(sum(meditations.time)) as total_time, DATE_FORMAT(user_meditations.created_at, '%Y-%m-%d') as date")
+        $lastSevenDayMeditations = UserMeditation::selectRaw("time(sum(meditations.time)) as total_time, DATE_FORMAT(user_meditations.created_at, '%Y-%m-%d') as date")
                                                  ->join('meditations', 'user_meditations.meditation_id', 'meditations.id')
                                                  ->where('user_meditations.user_id', $request->user()->id)
                                                  ->where('user_meditations.completed', 'Y')
-                                                 ->where('user_meditations.created_at', '>=', $date)
+                                                 ->where('user_meditations.created_at', '>=', $dateSevenDayAgo)
                                                  ->groupBy(DB::raw("DATE_FORMAT(user_meditations.created_at, '%Y-%m-%d')"))
                                                  ->orderBy('user_meditations.created_at')
                                                  ->get();
 
+        $lastSevenDayMeditationResult = is_null($lastSevenDayMeditations) ? null : $lastSevenDayMeditations->toArray();
+
         return response()->json([
             'success' => true,
-            'data' => $userMeditationTotalTime->toArray()
+            'data' => [
+                'last_seven_day_medidation' => $lastSevenDayMeditationResult
+            ],
         ]);
     }
-
 }
