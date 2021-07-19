@@ -25,6 +25,7 @@ class AuthService
         ]);
 
         if ($validator->fails()) {
+            $serviceResult->setSuccess(false);
             $serviceResult->setMessage($validator->errors()->first());
             return $serviceResult;
         }
@@ -33,6 +34,7 @@ class AuthService
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
+            $serviceResult->setSuccess(false);
             $serviceResult->setMessage(__('login.user_not_found'));
             return $serviceResult;
         }
