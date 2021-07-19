@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\UserMeditation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +18,9 @@ class StatisticController extends Controller
     {
         // User' ın tamamladığı toplam meditasyon sayısı
         $userMeditationCount = UserMeditation::where('user_id', $request->user()->id)
-                                             ->where('completed', 'Y')
+                                             ->where('created_at', '>=', $request->start_date)
+                                             ->where('created_at', '<=', $request->end_date)
+                                             ->where('completed', $request->completed)
                                              ->count();
 
         return response()->json([
@@ -40,7 +41,9 @@ class StatisticController extends Controller
         $userMeditationTotalTime = UserMeditation::selectRaw('time(sum(meditations.time)) as total')
                                                  ->join('meditations', 'user_meditations.meditation_id', 'meditations.id')
                                                  ->where('user_meditations.user_id', $request->user()->id)
-                                                 ->where('user_meditations.completed', 'Y')
+                                                 ->where('user_meditations.completed', $request->completed)
+                                                 ->where('user_meditations.created_at', '>=', $request->start_date)
+                                                 ->where('user_meditations.created_at', '<=', $request->end_date)
                                                  ->first('total');
 
         $userMeditationTotalTime = isset($userMeditationTotalTime) ? $userMeditationTotalTime->total : 0;
@@ -61,8 +64,10 @@ class StatisticController extends Controller
     {
         // User' ın hiç ara vermeden en fazla kaç gün üst üste meditasyon tamamladığı sayısı
         $userMeditations = UserMeditation::select(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d') as date"))
-                                         ->where('completed', 'Y')
                                          ->where('user_id', $request->user()->id)
+                                         ->where('completed', $request->completed)
+                                         ->where('created_at', '>=', $request->start_date)
+                                         ->where('created_at', '<=', $request->end_date)
                                          ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')"))
                                          ->orderBy('created_at')
                                          ->get();
