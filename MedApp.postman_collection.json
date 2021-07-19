@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "87f17f63-03e8-407c-99b7-6b65e996ce62",
+		"name": "MedApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "lani.morgan@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://med-app.test/api/login",
+					"protocol": "http",
+					"host": [
+						"med-app",
+						"test"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Meditation Count",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 8|sy92X78pZ0Mmp63adBNaACy5I8I1i9UgKJEN25mL",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "start_date",
+							"value": "2021-01-01 00:00:00",
+							"type": "text"
+						},
+						{
+							"key": "end_date",
+							"value": "2021-08-01 00:00:00",
+							"type": "text"
+						},
+						{
+							"key": "completed",
+							"value": "Y",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://med-app.test/api/meditation-count",
+					"protocol": "http",
+					"host": [
+						"med-app",
+						"test"
+					],
+					"path": [
+						"api",
+						"meditation-count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Last Week Meditation Time",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 1|5fNpy5mPuOcq2BLtSjhpyCz3fRijvXWeXiSdX8yT",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://med-app.test/api/last-seven-day-meditation",
+					"protocol": "http",
+					"host": [
+						"med-app",
+						"test"
+					],
+					"path": [
+						"api",
+						"last-seven-day-meditation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Meditation Top Count",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 1|5fNpy5mPuOcq2BLtSjhpyCz3fRijvXWeXiSdX8yT",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "start_date",
+							"value": "2021-01-01 00:00:00",
+							"type": "text"
+						},
+						{
+							"key": "end_date",
+							"value": "2021-08-01 00:00:00",
+							"type": "text"
+						},
+						{
+							"key": "completed",
+							"value": "Y",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://med-app.test/api/meditation-top-count",
+					"protocol": "http",
+					"host": [
+						"med-app",
+						"test"
+					],
+					"path": [
+						"api",
+						"meditation-top-count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Meditation Total Time",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 1|5fNpy5mPuOcq2BLtSjhpyCz3fRijvXWeXiSdX8yT",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "start_date",
+							"value": "2021-01-01 00:00:00",
+							"type": "text"
+						},
+						{
+							"key": "end_date",
+							"value": "2021-08-01 00:00:00",
+							"type": "text"
+						},
+						{
+							"key": "completed",
+							"value": "Y",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://med-app.test/api/meditation-total-time?start_date=2021-01-01 00:00:00&end_date=2021-08-01 00:00:00&completed=Y",
+					"protocol": "http",
+					"host": [
+						"med-app",
+						"test"
+					],
+					"path": [
+						"api",
+						"meditation-total-time"
+					],
+					"query": [
+						{
+							"key": "start_date",
+							"value": "2021-01-01 00:00:00"
+						},
+						{
+							"key": "end_date",
+							"value": "2021-08-01 00:00:00"
+						},
+						{
+							"key": "completed",
+							"value": "Y"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
