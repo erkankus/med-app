@@ -2,14 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\StatisticService;
 use Illuminate\Http\Request;
 use App\Models\UserMeditation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use App\Helpers\GlobalHelper;
 
 class StatisticController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    function getLastSevenDayMeditation(Request $request)
+    {
+        // User' ın son 7 gün ve bu günlerde meditasyon yaptığı toplam süre
+        $serviceResult = StatisticService::getLastSevenDayMeditation($request);
+
+        return $this->responseJson($serviceResult);
+    }
+
+
+
+
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -99,34 +115,6 @@ class StatisticController extends Controller
             'success' => true,
             'data' => [
                 'meditation_top_count' => $meditationTopCountResult
-            ],
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    function getLastSevenDayMeditation(Request $request)
-    {
-        // User' ın son 7 gün ve bu günlerde meditasyon yaptığı toplam süre
-        $dateSevenDayAgo = GlobalHelper::dateDayBefore(7);
-
-        $lastSevenDayMeditations = UserMeditation::selectRaw("time(sum(meditations.time)) as total_time, DATE_FORMAT(user_meditations.created_at, '%Y-%m-%d') as date")
-                                                 ->join('meditations', 'user_meditations.meditation_id', 'meditations.id')
-                                                 ->where('user_meditations.user_id', $request->user()->id)
-                                                 ->where('user_meditations.completed', 'Y')
-                                                 ->where('user_meditations.created_at', '>=', $dateSevenDayAgo)
-                                                 ->groupBy(DB::raw("DATE_FORMAT(user_meditations.created_at, '%Y-%m-%d')"))
-                                                 ->orderBy('user_meditations.created_at')
-                                                 ->get();
-
-        $lastSevenDayMeditationResult = is_null($lastSevenDayMeditations) ? null : $lastSevenDayMeditations->toArray();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'last_seven_day_medidation' => $lastSevenDayMeditationResult
             ],
         ]);
     }

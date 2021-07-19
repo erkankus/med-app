@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\UserService;
+use App\Services\AuthService;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
     /**
      * @param Request $request
@@ -13,7 +13,8 @@ class UserController extends Controller
      */
     function postLogin(Request $request)
     {
-        $serviceResult = UserService::login($request);
+        $serviceResult = AuthService::login($request);
+
         return $this->responseJson($serviceResult);
     }
 }

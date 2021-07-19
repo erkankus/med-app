@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Results\ServiceResult;
 
-class UserService
+class AuthService
 {
     /**
      * @param Request $request
@@ -46,6 +46,7 @@ class UserService
 
         $serviceResult->setSuccess(true);
         $serviceResult->setData($data);
+
         return $serviceResult;
     }
 }
